@@ -465,10 +465,13 @@ class ListObserverTests: BaseTestDataTestCase {
                         ["indexPath", "object"]
                     )
                     
-                    let indexPath = userInfo?["indexPath"] as? NSIndexPath
+                    guard let indexPath = userInfo?["indexPath"] as? IndexPath else {
+                        XCTAssertFalse(false, "Expected an indexPath and got nil instead.")
+                        return events == 1 || events == 2
+                    }
                     
-                    XCTAssertEqual(indexPath?.section, 0)
-                    XCTAssert(indexPath?.index(atPosition: 1) == 0 || indexPath?.index(atPosition: 1) == 1)
+                    XCTAssertEqual(indexPath.section, 0)
+                    XCTAssert(indexPath[indexPath.startIndex + 1] == 0 || indexPath[indexPath.startIndex + 1] == 1)
                     
                     let object = userInfo?["object"] as? TestEntity1
                     XCTAssertEqual(object?.isDeleted, true)
